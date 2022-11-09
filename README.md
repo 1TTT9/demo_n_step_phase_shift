@@ -1,8 +1,6 @@
 # demo_n_step_phase_shift
 
 
-![alt text](https://github.com/1TTT9/demo_n_step_phase_shift/blob/main/images/out.jpg?raw=true)
-
 ![alt text](https://github.com/1TTT9/demo_n_step_phase_shift/blob/main/images/demo.png?raw=true)
 
 A C++ implementation of n step phase shift algorithm for depth construction of structure-lighted images
