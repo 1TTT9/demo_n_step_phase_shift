@@ -163,11 +163,11 @@ void ThreeStepPhaseShift::phaseDecode()
 
 			if (!mask[ii])
 			{
-				theta = (float)atan2(sqrt3 * (phi1 - phi3), 2 * phi2 - phi1 - phi3) / twoPi;
+				theta =     (float)atan2( sqrt3 * (phi1 - phi3), 2 * phi2 - phi1 - phi3) / twoPi;
 
 				if (n_shift == 4)
 				{
-					theta = -1* (phi2 - phi4) / (phi1 - phi3);
+					theta = (float)atan2(  (phi4 - phi2), (phi1 - phi3) ) / twoPi;
 				}
 				imgWrappedPhase.at<float>(i, j) = theta;
 			}

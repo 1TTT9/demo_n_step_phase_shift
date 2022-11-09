@@ -71,10 +71,11 @@ void scale(Mat img) {
 
 int main()
 {
-    std::cout << "Start to generate depth image via n-step phase shifting algorithm\n";
+	std::cout << "Start to generate depth image via n-step phase shifting algorithm\n";
 
 	int sample_id = 1;
 	int k_step = 4;
+
 
 	string imgPath1 = "..\\pattern\\fringe0.png";
 	string imgPath2 = "..\\pattern\\fringe1.png";
@@ -86,7 +87,7 @@ int main()
 	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 
 	cout << "============================================================" << endl;
-	ThreeStepPhaseShift decoder(imgPath1, imgPath2, imgPath3, imgPath4, 4);
+	ThreeStepPhaseShift decoder(imgPath1, imgPath2, imgPath3, imgPath4, k_step);
 
 	cout << "------------------------------------------------------------" << endl;
 	decoder.compute();
