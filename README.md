@@ -12,8 +12,12 @@ and calculate the distance of every point in the field of view.
 I also add 4-step algorithm on the basis of the previous codes and tested the results of depth calculation, ~~however, it seems that the outcome of 3-step looked better for surfacial defect task.~~
 The time cost is roughtly 6.12-6.27(s) on my core i71165 labtop, and no significant difererence between 4-step and 3-step.
 
+## updated 2022-11-10
+  - fixed mis-use of neighbor points in sqdist function
+  - added comment for crop operation
 
-## updated 
+
+## updated 2022-11-09
   - fixed theta value calculation problem.
   - fixed k_step input problem.
 

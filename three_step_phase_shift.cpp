@@ -25,13 +25,16 @@ ThreeStepPhaseShift::ThreeStepPhaseShift(
 	width = imgPhase1.cols;
 	height = imgPhase1.rows;
 
+	/* 2022-11-10 I crop the input data in my case, you shall get rid of this part if any. */
 	Rect crop_region(0, 0, width*0.5, height);
-	// specifies the region of interest in Rectangle form
-	imgPhase1 = imgPhase1(crop_region);
-	imgPhase2 = imgPhase2(crop_region);
-	imgPhase3 = imgPhase3(crop_region);
-	imgPhase4 = imgPhase4(crop_region);
-
+	if (true)
+	{
+		// specifies the region of interest in Rectangle form
+		imgPhase1 = imgPhase1(crop_region);
+		imgPhase2 = imgPhase2(crop_region);
+		imgPhase3 = imgPhase3(crop_region);
+		imgPhase4 = imgPhase4(crop_region);
+	}
 
 	width = imgPhase1.cols;
 	height = imgPhase1.rows;
@@ -282,10 +285,10 @@ void ThreeStepPhaseShift::computeQuality() {
 		for (int j = 1; j < width - 1; j++) {
 			int ii = i * step + j;
 			float phi = (float)imgWrappedPhase.at<float>(i , j); //ptrPhase[ii];
-			quality[ii] = sqdist(phi, (float)imgWrappedPhase.at<float>(i , j+1)) +
-				sqdist(phi, imgWrappedPhase.at<float>(i , j-1)) +
-				sqdist(phi, (float)imgWrappedPhase.at<float>(i , j+1)) +
-				sqdist(phi, (float)imgWrappedPhase.at<float>(i , j-1));
+			quality[ii] = sqdist(phi,	imgWrappedPhase.at<float>(i ,   j+1)) +
+				sqdist(phi,				imgWrappedPhase.at<float>(i ,   j-1)) +
+				sqdist(phi,				imgWrappedPhase.at<float>(i+1 , j)) +
+				sqdist(phi,				imgWrappedPhase.at<float>(i-1 , j));
 			quality[ii] /= range[ii];
 		}
 	}

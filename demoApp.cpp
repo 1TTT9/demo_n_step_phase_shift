@@ -74,13 +74,12 @@ int main()
 	std::cout << "Start to generate depth image via n-step phase shifting algorithm\n";
 
 	int sample_id = 1;
-	int k_step = 4;
+	int k_step = 3;
 
-
-	string imgPath1 = "..\\pattern\\fringe0.png";
-	string imgPath2 = "..\\pattern\\fringe1.png";
-	string imgPath3 = "..\\pattern\\fringe2.png";
-	string imgPath4 = "..\\pattern\\fringe3.png";
+	string imgPath1 = ".\\pattern\\0.bmp";
+	string imgPath2 = ".\\pattern\\1.bmp";
+	string imgPath3 = ".\\pattern\\2.bmp";
+	string imgPath4 = ".\\pattern\\3.bmp";
 
 	Mat image = imread(imgPath1, CV_LOAD_IMAGE_COLOR);
 
