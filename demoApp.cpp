@@ -13,6 +13,13 @@
 //***C++11 Style:***
 #include <chrono>
 
+#ifdef _WINDOWS
+#include <direct.h>
+#define GetCurrentDir _getcwd
+#else
+#include <unistd.h>
+#define GetCurrentDir getcwd
+#endif
 
 
 using namespace std;
@@ -67,21 +74,52 @@ void scale(Mat img) {
 	img.convertTo(img, 1 / (max - min), -min / (max - min));
 }
 
+string get_current_dir() {
+	char buff[FILENAME_MAX]; //create string buffer to hold path
+	GetCurrentDir(buff, FILENAME_MAX);
+	string current_working_dir(buff);
+	return current_working_dir;
+}
+
+inline bool exists(const std::string& name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
 
 
-int main()
+int main(int argc, char* argv[])
 {
-	std::cout << "Start to generate depth image via n-step phase shifting algorithm\n";
+	cout << "Start to generate depth image via n-step phase shifting algorithm\n";
+
+
+	cout << "current dir:" << get_current_dir() << endl;
+
+	cout << "input dir: " << argv[1] << endl;
 
 	int sample_id = 1;
-	int k_step = 3;
+	int k_step = 4;
 
-	string imgPath1 = ".\\pattern\\0.bmp";
-	string imgPath2 = ".\\pattern\\1.bmp";
-	string imgPath3 = ".\\pattern\\2.bmp";
-	string imgPath4 = ".\\pattern\\3.bmp";
+	string inputDir(argv[1]);
+	string imgPath1 = inputDir + "/" + "0.bmp";
+	string imgPath2 = inputDir + "/" + "1.bmp";
+	string imgPath3 = inputDir + "/" + "2.bmp";
+	string imgPath4 = inputDir + "/" + "3.bmp";
+
+
+	if (!exists(imgPath1)) {
+		cout << "File " << imgPath1 << " does not exist?" << endl;
+
+		return 0;
+	}
 
 	Mat image = imread(imgPath1, CV_LOAD_IMAGE_COLOR);
+
+	/*  [ref](https://stackoverflow.com/questions/14189492/opencv-unable-to-write-images-using-imwrite)
+	     unable to write image with Opencv 3.1.0 and debug mode, win 64 version.
+		 instead, use filestorage to save Mat file.
+	 */ 
+	//image.convertTo(image, CV_32F);
+	//imwrite("d:\\out.jpg", image);
 
 	chrono::steady_clock::time_point begin = chrono::steady_clock::now();
 
@@ -122,6 +160,12 @@ int main()
 	namedWindow("Display imgDepth", CV_WINDOW_NORMAL);
 	//resizeWindow("Display imgDepth", imgDepth.cols*0.3, imgDepth.rows*0.3);
 	imshow("Display imgDepth", imgDepth);
+
+	string outFilename = "matDepth_" + to_string(k_step) + ".mat";
+	cv::FileStorage file(outFilename, cv::FileStorage::WRITE);
+	file << "depth" << decoder.getDepthImgF();
+
+
 
 	if (!image.data) {
 		cout << "Can not load the image!" << std::endl;

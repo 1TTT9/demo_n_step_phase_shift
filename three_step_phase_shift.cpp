@@ -25,6 +25,7 @@ ThreeStepPhaseShift::ThreeStepPhaseShift(
 	width = imgPhase1.cols;
 	height = imgPhase1.rows;
 
+	cout << "width0: " << width << "\nheight0: " << height << endl;
 	/* 2022-11-10 I crop the input data in my case, you shall get rid of this part if any. */
 	Rect crop_region(0, 0, width*0.5, height);
 	if (true)
@@ -34,10 +35,11 @@ ThreeStepPhaseShift::ThreeStepPhaseShift(
 		imgPhase2 = imgPhase2(crop_region);
 		imgPhase3 = imgPhase3(crop_region);
 		imgPhase4 = imgPhase4(crop_region);
+
+		width = imgPhase1.cols;
+		height = imgPhase1.rows;
 	}
 
-	width = imgPhase1.cols;
-	height = imgPhase1.rows;
 	if (width != imgPhase2.cols ||
 		width != imgPhase3.cols ||
 		height != imgPhase2.rows ||
@@ -45,24 +47,25 @@ ThreeStepPhaseShift::ThreeStepPhaseShift(
 		throw "invalid arguments: input images must have same dimension!";
 	}
 
+
+	imgColor = imgPhase1.clone(); //imread(imgPath1, IMREAD_COLOR);
+
+	//imgPhase1Gray = imread(imgPath1, IMREAD_GRAYSCALE);
+	cvtColor(imgColor, imgPhase1Gray, CV_RGB2GRAY);
+	
+
+	imgWrappedPhase = Mat::zeros(height, width, CV_32FC1);//imread(imgPath1, IMREAD_GRAYSCALE);
+
+	imgUnwrappedPhase = Mat::zeros(height, width, CV_32FC1); //imread(imgPath1, IMREAD_GRAYSCALE);
+
+	imgDepth = Mat::zeros(height, width,  CV_8UC1);
+
+	// cv_32fc1 = cv_32f + c1(1 channel)
+	imgDepthFloat = Mat::zeros(height, width, CV_32FC1);
+
+
 	int size = width * height;
-	imgColor = imread(imgPath1, IMREAD_COLOR);
-	imgColor = imgColor(crop_region);
 
-	imgPhase1Gray = imread(imgPath1, IMREAD_GRAYSCALE);
-	imgPhase1Gray = imgPhase1Gray(crop_region);
-
-	imgWrappedPhase = imread(imgPath1, IMREAD_GRAYSCALE);
-	imgWrappedPhase = imgWrappedPhase(crop_region);
-	imgWrappedPhase.convertTo(imgWrappedPhase, CV_32F);
-
-	imgUnwrappedPhase = imread(imgPath1, IMREAD_GRAYSCALE);
-	imgUnwrappedPhase = imgUnwrappedPhase(crop_region);
-	imgUnwrappedPhase.convertTo(imgUnwrappedPhase, CV_32F);
-
-	imgdepth = imread(imgPath1, IMREAD_GRAYSCALE);
-	imgdepth = imgdepth(crop_region);
-	//imgdepth.convertTo(imgdepth, CV_32F);
 	mask = new bool[size];
 	process = new bool[size];
 	quality = new float[size];
@@ -73,6 +76,7 @@ ThreeStepPhaseShift::ThreeStepPhaseShift(
 	noiseThreshold = 0.1;
 	zscale = 130;
 	zskew = 24;
+
 
 	// init step width for color and single channel images
 	step = width;
@@ -93,7 +97,8 @@ ThreeStepPhaseShift::~ThreeStepPhaseShift() {
 	delete[] process;
 	delete[] quality;
 	//delete[] depth;
-	imgdepth.release();
+	imgDepth.release();
+	imgDepthFloat.release();
 }
 
 void ThreeStepPhaseShift::phaseDecode()
@@ -210,11 +215,12 @@ void ThreeStepPhaseShift::computeDepth() {
 		for (int j = 0; j < width; j++) {
 			int ii = i * step + j;
 			if (!mask[ii]) {
-				imgdepth.at<uchar>(i, j) = ((float)imgUnwrappedPhase.at <float > (i, j) - planephase) * zscale;
+				imgDepth.at<uchar>(i, j) = ((float)imgUnwrappedPhase.at <float > (i, j) - planephase) * zscale;
+				imgDepthFloat.at<float>(i, j) = ((float)imgUnwrappedPhase.at <float >(i, j) - planephase) * zscale;
 			}
 			else {
-				imgdepth.at<uchar>(i, j) = 255.f;
-				//depth[ii] = 0.f;
+				imgDepth.at<uchar>(i, j) = 255.f;
+				imgDepthFloat.at<float>(i, j) = 0.f;
 			}
 		}
 	}

@@ -10,6 +10,7 @@
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 using namespace cv;
 using namespace std;
 
@@ -62,7 +63,8 @@ public:
 	float getZskew() { return zskew; }
 	float getNoiseThreshold() { return noiseThreshold; }
 	//float* getDepth() { return depth; }
-	Mat getDepthImg() { return imgdepth; }
+	Mat getDepthImg() { return imgDepth; }
+	Mat getDepthImgF() { return imgDepthFloat; }
 	bool* getMask() { return mask; }
 
 	Mat getWrappedPhase() { return imgWrappedPhase; };
@@ -124,7 +126,8 @@ private:
 	float *quality;
 	float *range;
 	//float *depth;
-	Mat imgdepth;
+	Mat imgDepth;
+	Mat imgDepthFloat;
 	float noiseThreshold;
 	float zscale;
 	float zskew;
