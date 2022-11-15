@@ -16,18 +16,21 @@ The time cost is roughtly 6.12-6.27(s) on my core i71165 labtop, and no signific
 
 ## updated 
 
-	### 2022-11-11
-	  - fixed cropping problem (replace corp with clone)
-	  - ouptut float depth map
-	  - reconstruct 3d by detph map
+### 2022-11-15
+  - fixed mis-use of convertTo function
 
-	### 2022-11-10
-	  - fixed mis-use of neighbor points in sqdist function
-	  - added comment for crop operation
+### 2022-11-11
+  - fixed cropping problem (replace corp with clone)
+  - ouptut float depth map
+  - reconstruct 3d by detph map
 
-	### 2022-11-09
-	  - fixed theta value calculation problem.
-	  - fixed k_step input problem.
+### 2022-11-10
+  - fixed mis-use of neighbor points in sqdist function
+  - added comment for crop operation
+
+### 2022-11-09
+  - fixed theta value calculation problem.
+  - fixed k_step input problem.
 
 ## benefit 
   - fast scan (in 2~10 second*, depending on how many steps you choose)

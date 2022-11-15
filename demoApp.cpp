@@ -71,7 +71,7 @@ void scale(Mat img) {
 	}
 
 	cout << "min: " << min << "\nmax: " << max << endl;
-	img.convertTo(img, 1 / (max - min), -min / (max - min));
+	img.convertTo(img, CV_32FC1,  1. / (max - min), -min / (max - min));
 }
 
 string get_current_dir() {
